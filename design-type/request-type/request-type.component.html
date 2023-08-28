@@ -1,0 +1,95 @@
+<form
+  [formGroup]="requestTypeForm"
+  (ngSubmit)="onSubmit()"
+  class="request-form"
+  *ngIf="isEnable"
+>
+  <div formArrayName="classes">
+    <div
+      class="my-5"
+      *ngFor="
+        let classControl of requestTypeForm.get('classes')?.controls;
+        let classIndex = index
+      "
+      [formGroupName]="classIndex"
+    >
+      <h3>Domain {{ classIndex + 1 }}</h3>
+      <div class="request-class">
+        <mat-form-field appearance="outline">
+          <mat-label>Domain Name:</mat-label>
+          <input
+            placeholder="DomainName.DomainNameReference"
+            matInput
+            type="text"
+            formControlName="className"
+          />
+        </mat-form-field>
+      </div>
+      <div formArrayName="properties">
+        <div
+          *ngFor="
+            let propertyControl of classControl.get('properties').controls;
+            let propertyIndex = index
+          "
+          [formGroupName]="propertyIndex"
+        >
+          <div class="request-property">
+            <mat-form-field appearance="outline">
+              <mat-label>Property Name:</mat-label>
+              <input matInput type="text" formControlName="propertyName" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Property Type:</mat-label>
+              <mat-select formControlName="propertyType">
+                <mat-option value="number">Number</mat-option>
+                <mat-option value="date">Date</mat-option>
+                <mat-option value="string">String</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button
+              mat-icon-button
+              color="warn"
+              type="button"
+              (click)="removeProperty(classIndex, propertyIndex)"
+            >
+              <span class="icon-close"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <button
+        mat-button
+        color="primary"
+        type="button"
+        (click)="addNewProperty(classIndex)"
+      >
+        Add Property
+      </button>
+      <button
+        mat-button
+        color="warn"
+        type="button"
+        (click)="removeClass(classIndex)"
+      >
+        Remove Domain
+      </button>
+    </div>
+  </div>
+  <div class="my-5">
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="addNewClass()"
+    >
+      Add Domain
+    </button>
+    <button mat-raised-button color="accent" type="submit">Submit</button>
+  </div>
+</form>
+<div *ngIf="!isEnable">
+  <pre>{{ requestTypes | json }}</pre>
+  <button mat-raised-button color="primary" (click)="enterEditMode()">
+    Edit
+  </button>
+</div>

@@ -1,0 +1,117 @@
+<div class="container">
+  <fieldset class="my-5" *ngIf="isEnable">
+    <section>
+      <mat-checkbox
+        *ngIf="isNested"
+        class="example-margin"
+        [(ngModel)]="isList"
+        (click)="onIsList()"
+        >Is List</mat-checkbox
+      >
+    </section>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Domain Name:</mat-label>
+      <input matInput [(ngModel)]="responseType.className" />
+    </mat-form-field>
+    <div *ngFor="let property of responseType.properties; let i = index">
+      <h4>Property {{ i + 1 }}</h4>
+      <mat-form-field appearance="outline">
+        <mat-label>Property Name:</mat-label>
+        <input matInput [(ngModel)]="property.propertyName" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Property Type:</mat-label>
+        <mat-select [(ngModel)]="property.propertyType">
+          <mat-option value="String">String</mat-option>
+          <mat-option value="Date">Date</mat-option>
+          <mat-option value="Number">Number</mat-option>
+          <mat-option value="List.String">List - String</mat-option>
+          <mat-option value="List.Date">List - Date</mat-option>
+          <mat-option value="List.Number">List - Number</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button
+        mat-icon-button
+        color="warn"
+        type="button"
+        (click)="removeProperty(i)"
+      >
+        <span class="icon-close"> </span>
+      </button>
+    </div>
+    <div class="row m-5">
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="addProperty()"
+      >
+        Add Property
+      </button>
+    </div>
+
+    <div *ngFor="let nestedDomin of responseType.nestedClass; let i = index">
+      <mat-accordion>
+        <mat-expansion-panel
+          (opened)="panelOpenState = true"
+          (closed)="panelOpenState = false"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title> Nested Domain {{ i + 1 }} </mat-panel-title>
+            <button
+              class="mx-5"
+              mat-icon-button
+              color="warn"
+              type="button"
+              (click)="removeNestedClass(i)"
+            >
+              <span class="icon-close"> </span>
+            </button>
+          </mat-expansion-panel-header>
+          <!-- Recursive form rendering for nested classes -->
+          <app-response-type
+            [responseType]="nestedDomin"
+            [isNested]="true"
+            appearance="outline"
+          ></app-response-type>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+
+    <div class="row m-5">
+      <mat-error *ngIf="isClassEmpty(responseType)">
+        Please fill all fields before submitting.
+      </mat-error>
+    </div>
+    <div class="row m-5">
+      <button
+        class="mx-5"
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="addNestedClass()"
+      >
+        Add Nested Domain
+      </button>
+      <button
+        class="mx-5"
+        mat-raised-button
+        color="primary"
+        type="submit"
+        *ngIf="!isNested"
+        (click)="onSubmit()"
+      >
+        Submit
+      </button>
+    </div>
+  </fieldset>
+  <div *ngIf="!isEnable">
+    Submitted Response Type:
+    <pre>{{ submittedResponseType | json }}</pre>
+    <button mat-raised-button color="primary" (click)="enterEditMode()">
+      Edit
+    </button>
+  </div>
+</div>

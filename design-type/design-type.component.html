@@ -1,0 +1,45 @@
+<div class="mb-5">
+  <div class="col-md-3">
+    <mat-form-field [formGroup]="capablityForm">
+      <mat-label>Capability</mat-label>
+      <input formControlName="capablity" (input)="onChange()" matInput />
+    </mat-form-field>
+  </div>
+
+  <!-- Toggle buttons to show/hide components -->
+
+  <div class="clearfix bshadow0 pbs">
+    <div (click)="isRequestTypeVisible = !isRequestTypeVisible">
+      <span *ngIf="!isRequestTypeVisible" class="icon-UpArrow"></span>
+      <span *ngIf="isRequestTypeVisible" class="icon-Down-arrow"></span>
+      <span class="mls">Request Type</span>
+    </div>
+    <div *ngIf="isRequestTypeVisible" class="container-fuild">
+      <app-request-type (change)="onValidComponent()"></app-request-type>
+    </div>
+  </div>
+  <div class="clearfix bshadow0 pbs">
+    <div (click)="isResponseTypeVisible = !isResponseTypeVisible">
+      <span *ngIf="!isResponseTypeVisible" class="icon-UpArrow"></span>
+      <span *ngIf="isResponseTypeVisible" class="icon-Down-arrow"></span>
+      <span class="mls">Response Type </span>
+    </div>
+    <div *ngIf="isResponseTypeVisible">
+      <app-response-type
+        [responseType]="reponseType"
+        (change)="onValidComponent()"
+        [isNested]="false"
+      >
+      </app-response-type>
+    </div>
+  </div>
+</div>
+<!-- Conditionally show the components based on the boolean variables -->
+<div class="m-5" *ngIf="isSubmit">
+  <button class="m-5" mat-raised-button color="primary" (click)="onSubmit()">
+    Submit
+  </button>
+</div>
+<mat-error>
+  {{ errorMessage }}
+</mat-error>
